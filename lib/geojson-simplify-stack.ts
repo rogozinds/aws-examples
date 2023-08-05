@@ -6,6 +6,7 @@ import * as apigw from "aws-cdk-lib/aws-apigateway";
 import { SqsStack } from "./constructs/sqs";
 import { S3Stack } from "./constructs/s3";
 import { DynamoDbStack } from "./constructs/dynamodb";
+import { APIGWStack } from "./constructs/apigw";
 import { aws_dynamodb as dynamodb } from "aws-cdk-lib";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -16,6 +17,7 @@ export class GeoJsonSimplifyStack extends cdk.Stack {
     super(scope, id, props);
     const sqsStack = new SqsStack(this, "SqsStack", { visibilityTimeout: 400 });
     const s3Stack = new S3Stack(this, "S3Stack");
+    const apiGWStack = new APIGWStack(this, "ApiGatewayStack");
     const dynamoDBStack = new DynamoDbStack(this, "DynamoDbStack", {
       tableName: "Orders",
       partitionKey: { name: "filename", type: dynamodb.AttributeType.STRING },
@@ -49,22 +51,8 @@ export class GeoJsonSimplifyStack extends cdk.Stack {
         ],
       }),
     );
+
     // Define your log group
-    const logGroup = new logs.LogGroup(this, "ApiGatewayLogs", {
-      retention: logs.RetentionDays.ONE_WEEK,
-    });
-    // Define API Gateway
-    const api = new apigw.RestApi(this, "GeoJsonApi", {
-      restApiName: "GeoJson Service",
-      description: "Service to simplify GeoJson data.",
-      deployOptions: {
-        stageName: "prod",
-        accessLogDestination: new apigw.LogGroupLogDestination(logGroup),
-        accessLogFormat: apigw.AccessLogFormat.clf(), // Common Log Format
-      },
-      cloudWatchRole: true,
-    });
-    const uploadResource = api.root.addResource("process");
 
     // Allow Lambda to write to S3 and SQS and read/write from/to DynamoDB
     const enqueueLambda = lambdaStack.enqueueLambda;
@@ -79,7 +67,7 @@ export class GeoJsonSimplifyStack extends cdk.Stack {
     dynamoDBStack.table.grantReadWriteData(processingLambda);
 
     // Add methods to resources
-    uploadResource.addMethod(
+    apiGWStack.uploadResource.addMethod(
       "POST",
       new apigw.LambdaIntegration(enqueueLambda),
     );
