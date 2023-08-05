@@ -18,7 +18,6 @@ export interface GeoJsonLambdaStackProps extends StackProps {
 export class LambdaStack extends Construct {
   public readonly enqueueLambda: lambda.Function;
   public readonly processingLambda: lambda.Function;
-  public readonly readLambda: lambda.Function;
 
   constructor(scope: Construct, id: string, props: GeoJsonLambdaStackProps) {
     super(scope, id);
@@ -54,15 +53,6 @@ export class LambdaStack extends Construct {
           batchSize: 10, // Adjust based on your needs
         }),
       ],
-    });
-    this.readLambda = new lambda.Function(this, "ReadLambda", {
-      runtime: lambda.Runtime.NODEJS_18_X,
-      code: lambda.Code.fromAsset(props.lambdaCodePath),
-      handler: "read.handler",
-      environment: {
-        BUCKET_NAME_PROCESSED: props.processedBucketName,
-        TABLE_NAME: props.tableName,
-      },
     });
   }
 }

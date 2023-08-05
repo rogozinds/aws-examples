@@ -64,19 +64,15 @@ export class GeoJsonSimplifyStack extends cdk.Stack {
       },
       cloudWatchRole: true,
     });
-    // Define upload and read resources
     const uploadResource = api.root.addResource("process");
-    const readResource = api.root.addResource("read");
 
     // Allow Lambda to write to S3 and SQS and read/write from/to DynamoDB
     const enqueueLambda = lambdaStack.enqueueLambda;
     const processingLambda = lambdaStack.processingLambda;
-    const readLambda = lambdaStack.readLambda;
     s3Stack.originalBucket.grantWrite(enqueueLambda);
     s3Stack.originalBucket.grantRead(enqueueLambda);
     s3Stack.originalBucket.grantRead(processingLambda);
     s3Stack.processedBucket.grantWrite(processingLambda);
-    s3Stack.processedBucket.grantRead(readLambda);
 
     sqsStack.queue.grantSendMessages(enqueueLambda);
     dynamoDBStack.table.grantReadWriteData(enqueueLambda);
@@ -87,6 +83,5 @@ export class GeoJsonSimplifyStack extends cdk.Stack {
       "POST",
       new apigw.LambdaIntegration(enqueueLambda),
     );
-    readResource.addMethod("GET", new apigw.LambdaIntegration(readLambda));
   }
 }
