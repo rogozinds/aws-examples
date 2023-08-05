@@ -1,0 +1,20 @@
+{
+  "type": "Feature",
+  "properties": {
+    "name": "Central Park",
+    "temperature": 27,
+    "soil": "loam"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [-73.994053, 40.750307],
+        [-73.994053, 40.751283],
+        [-73.992197, 40.751283],
+        [-73.992197, 40.750307],
+        [-73.994053, 40.750307]
+      ]
+    ]
+  }
+}
