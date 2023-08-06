@@ -44,7 +44,6 @@ export const handler = async function (event) {
   let notProcessed = [];
 
   for (const order of orders) {
-    const orderId = order.orderId;
     const filename = order.filename;
     const force = order.force;
 
@@ -59,7 +58,7 @@ export const handler = async function (event) {
       await s3Client.send(headObjectCommand);
     } catch (error) {
       console.log("ERROR READING FROM S3", error);
-      notProcessed.push({ orderId: orderId, filename: filename });
+      notProcessed.push({ filename: filename });
       continue;
     }
 
@@ -75,7 +74,7 @@ export const handler = async function (event) {
 
     // If the file has been processed and force is not true, skip this order
     if (fileItem.Item && fileItem.Item.status.S === "processed" && !force) {
-      notProcessed.push({ orderId: orderId, filename: filename });
+      notProcessed.push({ filename: filename });
       continue;
     }
 

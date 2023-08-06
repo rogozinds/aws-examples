@@ -10,11 +10,9 @@ export class APIGWStack extends Construct {
   public readonly uploadResource: apigw.Resource;
   constructor(scope: Construct, id: string) {
     super(scope, id);
-
     const logGroup = new logs.LogGroup(this, "ApiGatewayLogs", {
       retention: logs.RetentionDays.ONE_WEEK,
     });
-
     this.apiEndpoint = new apigw.RestApi(this, "GeoJsonApi", {
       restApiName: "GeoJson Service",
       description: "Service to simplify GeoJson data.",
@@ -25,7 +23,6 @@ export class APIGWStack extends Construct {
       },
       cloudWatchRole: true,
     });
-
     this.uploadResource = this.apiEndpoint.root.addResource("process");
   }
 }

@@ -18,10 +18,8 @@ export interface GeoJsonLambdaStackProps extends StackProps {
 export class LambdaStack extends Construct {
   public readonly enqueueLambda: lambda.Function;
   public readonly processingLambda: lambda.Function;
-
   constructor(scope: Construct, id: string, props: GeoJsonLambdaStackProps) {
     super(scope, id);
-
     // Define the Lambda function for enqueueing the tasks
     this.enqueueLambda = new lambda.Function(this, "EnqueueLambda", {
       runtime: lambda.Runtime.NODEJS_18_X,
@@ -34,7 +32,6 @@ export class LambdaStack extends Construct {
         QUEUE_URL: props.queue.queueUrl,
       },
     });
-
     // Define the Lambda function for processing the tasks
     this.processingLambda = new lambda.Function(this, "ProcessingLambda", {
       runtime: lambda.Runtime.NODEJS_18_X,

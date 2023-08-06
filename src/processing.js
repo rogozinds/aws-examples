@@ -15,11 +15,12 @@ const SIMPLIFY_COEF = 0.04;
 
 const simplifyGeoJSON = async (geoJsonData, simplifyCoef) => {
   const ALG = "visvalingam";
-
-  let command = `-i input.geojson snap -simplify ${ALG} ${simplifyCoef}
-            -filter-islands min-area=1km2 
-            -o output.geojson format=geojson;
-            `;
+  //prettier-ignore-start
+  let command =
+    `-i input.geojson snap -simplify ${ALG} ${simplifyCoef} ` +
+    `-filter-islands min-area=1km2 ` +
+    `-o output.geojson format=geojson `;
+  //prettier-ignore-end
   const input = {
     "input.geojson": geoJsonData,
   };
@@ -34,7 +35,6 @@ const simplifyGeoJSON = async (geoJsonData, simplifyCoef) => {
     throw error;
   }
 };
-
 export const handler = async function (event) {
   const order = JSON.parse(event.Records[0].body);
   const filename = order.key; // filename from SQS message

@@ -31,7 +31,6 @@ export class GeoJsonSimplifyStack extends cdk.Stack {
       tableName: dynamoDBStack.table.tableName,
     });
 
-    // Create an IAM Role
     const role = new iam.Role(this, "ApiGatewayCloudWatchLogsRole", {
       assumedBy: new iam.ServicePrincipal("apigateway.amazonaws.com"),
     });
@@ -52,9 +51,7 @@ export class GeoJsonSimplifyStack extends cdk.Stack {
       }),
     );
 
-    // Define your log group
-
-    // Allow Lambda to write to S3 and SQS and read/write from/to DynamoDB
+    // Specify permissions
     const enqueueLambda = lambdaStack.enqueueLambda;
     const processingLambda = lambdaStack.processingLambda;
     s3Stack.originalBucket.grantWrite(enqueueLambda);

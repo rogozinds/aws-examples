@@ -18,7 +18,7 @@ export class DynamoDbStack extends Construct {
     this.table = new dynamodb.Table(this, "OrdersTableStack", {
       tableName: props?.tableName || "OrdersTable",
       partitionKey: props?.partitionKey || {
-        name: "id",
+        name: "filename",
         type: dynamodb.AttributeType.STRING,
       },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
