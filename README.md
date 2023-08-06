@@ -27,6 +27,8 @@ to process the task.
 4. **AWS CDK**: [Installation guide](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html).
 
 ## How to use the service
+Before you can deploy the final version of the service, you have to call `npm install` from the src folder to install the
+mapshaper dependency. Otherwise, you will recieve the error from the processing lambda, that mapshaper module could not be imported.
 
 After you call `cdk deploy`, AWS CDK will create an AWS stack for the project on your AWS account. It will show a "Deployment is
 successful" message along with the RestAPI endpoint, in a format like this:
